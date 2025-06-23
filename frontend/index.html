@@ -5,33 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Index Page</title>
   <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
-  <!-- Background image -->
-  <img src="assets/images/Mountain wallpaper sunrise.jpeg" alt="Background" class="background-image" />
-    <!-- Navigation bar -->
-    <div class="navbar-container">
-    <nav class="navbar">
-        <ul>
-        <li class="active"><a class="nav-button" href="index.html">Home</a></li>
-        <li><a class="nav-button" href="about.html">About</a></li>
-        <li><a class="nav-button" href="contact.html">Contact</a></li>
-        <li><a class="nav-button" href="contact.html">Contact</a></li>
-        </ul>
-    </nav>
+  <!-- Navbar -->
+  <div class="navbar-container">
+    <div class="navbar">
+      <ul>
+        <li class="active"><a class="nav-button" href="index.html"><i class="fas fa-home"></i></a></li>
+        <li><a class="nav-button" href="./moon.html"><i class="fas fa-moon"></i></a></li>
+        <li><a class="nav-button" href="#"><i class="far fa-circle"></i></a></li>
+        <li><a class="nav-button" href="../frontend/music.html"><i class="fas fa-music"></i></a></li>
+      </ul>
     </div>
+  </div>
 
-  <!-- Main content -->
+  <!-- Unified main wrapper -->
+  <div class="main-wrapper">
     <main class="content">
-        <div class="date-container">
-            <h1 class="">Welcome to Index</h1>
-            <p>Your peaceful place to begin the day — <span id="current-date"></span>.</p>
+    <section class="welcome-container">
+        <h1>Welcome to Index</h1>
+        <span id="current-date" aria-label="Current date"></span>
 
-
+        <section class="notification-container" role="alert" aria-live="polite">
+        <h2>Notification</h2>
+        <p>Welcome to the Index page! This is a simple notification message.</p>
+        </section>
+    </section>
     </main>
 
 
+    <section class="todo-section" aria-label="Todo tasks carousel">
+    <h2 class="todo-heading">What do you need today?</h2>
+    <div class="todo-carousel-wrapper">
+        <button class="carousel-arrow left" aria-label="Scroll left">&lt;</button>
+        <div class="todo-slider" tabindex="0" role="list">
+        <div class="todo-card" role="listitem" tabindex="0">📄 Complete project documentation</div>
+        <div class="todo-card" role="listitem" tabindex="0">🔍 Review the codebase</div>
+        <div class="todo-card" role="listitem" tabindex="0">📅 Prepare for the team meeting</div>
+        <div class="todo-card" role="listitem" tabindex="0">🧠 Brainstorm new ideas</div>
+        <div class="todo-card" role="listitem" tabindex="0">📝 Organize your workspace</div>
+        </div>
+        <button class="carousel-arrow right" aria-label="Scroll right">&gt;</button>
+    </div>
+    </section>
 
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 Elliot. All rights reserved.</p>
+  </footer>
 
   <script src="assets/js/main.js"></script>
 </body>
