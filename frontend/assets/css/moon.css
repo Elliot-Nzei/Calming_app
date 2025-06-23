@@ -74,6 +74,7 @@ html, body {
   color: #fff;
 }
 
+/* Responsive Navbar for smaller screens */
 @media (max-width: 768px) {
   .navbar ul {
     flex-direction: column;
@@ -106,9 +107,9 @@ html, body {
   overflow: hidden;
 }
 
-/* ================== Chat Box ================== */
+/* ================== Chat Box Container ================== */
 .chat-container {
-  width: 100%;
+  width: 90vw;
   max-width: 700px;
   max-height: 90vh;
   background: linear-gradient(145deg, rgba(24,24,36,0.85), rgba(14,14,24,0.9));
@@ -120,8 +121,10 @@ html, body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
+/* Heading */
 .chat-container h2 {
   margin-bottom: 25px;
   color: aquamarine;
@@ -132,6 +135,7 @@ html, body {
   text-shadow: 0 0 8px rgba(127, 255, 212, 0.7);
 }
 
+/* Chat Messages Box */
 .chat-box {
   flex: 1;
   overflow-y: auto;
@@ -160,6 +164,7 @@ html, body {
   align-items: flex-end;
 }
 
+/* Message Input */
 #message-input {
   flex: 1;
   resize: none;
@@ -173,6 +178,7 @@ html, body {
   min-height: 56px;
   box-shadow: inset 0 0 8px rgba(127, 255, 212, 0.3);
   font-weight: 500;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 #message-input::placeholder {
@@ -185,7 +191,7 @@ html, body {
   box-shadow: 0 0 12px rgba(127, 255, 212, 0.8);
 }
 
-/* ================== Button ================== */
+/* Submit Button */
 #chat-form button {
   background-color: aquamarine;
   border: none;
@@ -200,9 +206,42 @@ html, body {
   gap: 10px;
   transition: background-color 0.35s ease, box-shadow 0.3s ease;
   box-shadow: 0 4px 12px rgba(127, 255, 212, 0.6);
+  flex-shrink: 0;
 }
 
 #chat-form button:hover {
   background-color: #7fffd4;
   box-shadow: 0 6px 20px rgba(127, 255, 212, 0.9);
+}
+
+/* ================== Responsive Adjustments ================== */
+@media (max-width: 480px) {
+  .chat-container {
+    width: 95vw;
+    padding: 20px 16px;
+    max-height: 85vh;
+    border-radius: 16px;
+  }
+
+  .chat-container h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+
+  .chat-box {
+    font-size: 0.95rem;
+    padding: 12px 14px;
+    margin-bottom: 20px;
+  }
+
+  #message-input {
+    min-height: 48px;
+    font-size: 1rem;
+    padding: 12px 14px;
+  }
+
+  #chat-form button {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
 }
