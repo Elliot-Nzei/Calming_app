@@ -23,32 +23,39 @@
   <!-- Unified main wrapper -->
   <div class="main-wrapper">
     <main class="content">
-    <section class="welcome-container">
-        <h1>Welcome to Index</h1>
+      <section class="welcome-container">
+        <h1 id="welcome-text">Welcome to Index</h1>
         <span id="current-date" aria-label="Current date"></span>
 
         <section class="notification-container" role="alert" aria-live="polite">
-        <h2>Notification</h2>
-        <p>Welcome to the Index page! This is a simple notification message.</p>
+          <h2>Notification</h2>
+          <p>Welcome to the Index page! This is a simple notification message.</p>
         </section>
-    </section>
+      </section>
     </main>
 
 
-    <section class="todo-section" aria-label="Todo tasks carousel">
-    <h2 class="todo-heading">What do you need today?</h2>
+  <section class="todo-section" aria-labelledby="todo-heading">
+    <h2 class="todo-heading" id="todo-heading">What do you need today?</h2>
+
     <div class="todo-carousel-wrapper">
-        <button class="carousel-arrow left" aria-label="Scroll left">&lt;</button>
-        <div class="todo-slider" tabindex="0" role="list">
+      <button class="carousel-arrow left" aria-label="Scroll left" type="button" aria-disabled="true">
+        <span aria-hidden="true">⮜</span>
+      </button>
+
+      <div class="todo-slider" tabindex="0" role="list" aria-live="polite" aria-roledescription="carousel">
         <div class="todo-card" role="listitem" tabindex="0">📄 Complete project documentation</div>
         <div class="todo-card" role="listitem" tabindex="0">🔍 Review the codebase</div>
         <div class="todo-card" role="listitem" tabindex="0">📅 Prepare for the team meeting</div>
         <div class="todo-card" role="listitem" tabindex="0">🧠 Brainstorm new ideas</div>
         <div class="todo-card" role="listitem" tabindex="0">📝 Organize your workspace</div>
-        </div>
-        <button class="carousel-arrow right" aria-label="Scroll right">&gt;</button>
+      </div>
+
+      <button class="carousel-arrow right" aria-label="Scroll right" type="button">
+        <span aria-hidden="true">⮞</span>
+      </button>
     </div>
-    </section>
+  </section>
 
   </div>
 

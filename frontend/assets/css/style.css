@@ -1,23 +1,28 @@
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   padding: 0;
-  height: 100vh;                /* changed from 100% to 100vh for consistency */
-  min-height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
   font-family: 'Arial', sans-serif;
   background-image: url('../images/ai idea image.jpeg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
 }
 
 body {
   overflow-y: auto;
 }
 
+/* ==================== Main Layout ==================== */
 .main-wrapper {
   flex: 1;
   display: flex;
@@ -108,23 +113,22 @@ body {
 
 /* ==================== Content ==================== */
 .content {
-  max-width: 900px;
-  margin: 80px auto 40px;
+  max-width: 960px;
+  margin: clamp(80px, 12vh, 100px) auto 40px;
   padding: 0 clamp(10px, 4vw, 20px);
   color: #fff;
   line-height: 1.5;
+  flex: 1;
 }
 
 .welcome-container {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  overflow-y: auto;             /* allow vertical scrolling if needed */
-  scrollbar-width: none;        /* Firefox */
-  -ms-overflow-style: none;     /* IE and Edge */
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 
-/* Hide scrollbar for WebKit browsers (Chrome, Safari, Opera) */
 .welcome-container::-webkit-scrollbar {
   display: none;
 }
@@ -166,67 +170,75 @@ body {
 }
 
 /* ==================== Todo Section ==================== */
-.todo-section {
+.todo-carousel-wrapper {
   position: relative;
-  max-width: 100%;
-  margin: clamp(60px, 10vh, 120px) auto 2vh;
-  padding: 4vh 5vw;
-  background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  color: #fff;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+  justify-content: center;
+  /* subtle fading edges for scroll hint */
+  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
 }
 
 .todo-heading {
-  margin: 0 0 25px 0;
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  color: #e0e0e0;
-  text-align: left;
-}
-
-.todo-carousel-wrapper {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  margin: 0 auto;
+  color: white;
+  padding-bottom: 10px;     /* keep bottom padding */
+  margin-left: 20px;        /* 20px margin on left */
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-right: 0;
 }
 
 .todo-slider {
   display: flex;
+  flex-wrap: nowrap;
   gap: 16px;
-  overflow-x: auto;
+  overflow-x: scroll;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  scrollbar-width: none;
-  width: 100%;
   padding-bottom: 5px;
-  -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  justify-content: center;
+  width: max-content;
+  margin: 0 auto;
+  scroll-padding-inline: 50%;
+  outline-offset: 4px; /* for focus ring spacing */
 }
 
 .todo-slider::-webkit-scrollbar {
   display: none;
 }
 
+.todo-slider:focus {
+  outline: 2px solid #00ffe1; /* bright focus ring */
+  outline-offset: 4px;
+}
+
 .todo-card {
-  flex: 0 0 100%;
-  max-width: 95%;
+  flex: 0 0 auto;
+  width: 70%;
+  max-width: 500px;
   background-color: rgba(30, 30, 30, 0.4);
   backdrop-filter: blur(10px) saturate(180%);
-  -webkit-backdrop-filter: blur(10px) saturate(180%);
   border-radius: 14px;
   padding: clamp(20px, 5vw, 30px);
-  scroll-snap-align: start;
+  scroll-snap-align: center;
   transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
   font-size: 1.125rem;
   font-weight: 600;
   color: #f0f0f0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  user-select: none;
+  cursor: grab;
+}
+
+.todo-card:active {
+  cursor: grabbing;
 }
 
 .todo-card:hover,
@@ -234,61 +246,85 @@ body {
   transform: scale(1.07);
   background-color: #2b2b2b;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9);
+  outline: none;
 }
 
-/* ==================== Carousel Arrows ==================== */
+/* Improved carousel arrows */
 .carousel-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(30, 30, 30, 0.85);
-  color: #ddd;
-  border: none;
-  padding: 12px 18px;
-  font-size: 28px;
+  background: rgba(216, 222, 222, 0.1);
+  color: #00ffe1;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  padding: 18px 22px;
+  font-size: 36px;
+  font-weight: bold;
   cursor: pointer;
   border-radius: 50%;
   z-index: 20;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  box-shadow:
+    0 0 15px rgba(0, 255, 225, 0.4),
+    0 0 40px rgba(0, 255, 225, 0.2);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(6px) saturate(160%);
+  -webkit-backdrop-filter: blur(6px) saturate(160%);
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.carousel-arrow:hover,
-.carousel-arrow:focus {
-  background: #444;
+.carousel-arrow:hover:not([aria-disabled="true"]) {
+  background: rgba(0, 255, 225, 0.15);
   color: #fff;
+  box-shadow:
+    0 0 25px rgba(0, 255, 225, 0.7),
+    0 0 60px rgba(0, 255, 225, 0.4);
+  transform: translateY(-50%) scale(1.15);
+}
+
+.carousel-arrow[aria-disabled="true"] {
+  cursor: default;
+  opacity: 0.3;
+  box-shadow: none;
+  pointer-events: none;
 }
 
 .carousel-arrow.left {
-  left: -45px;
+  left: -55px;
 }
 
 .carousel-arrow.right {
-  right: -45px;
+  right: -55px;
 }
 
-/* ==================== Responsive Carousel ==================== */
+/* Responsive tweaks */
 @media (max-width: 768px) {
-  .todo-section {
-    padding: 20px;
-  }
-
-  .todo-heading {
-    font-size: 1.6rem;
-  }
-
-  .todo-card {
-    font-size: 1rem;
-    padding: 20px 25px;
-  }
-
   .carousel-arrow.left {
-    left: -30px;
+    left: -40px;
   }
 
   .carousel-arrow.right {
-    right: -30px;
+    right: -40px;
+  }
+
+  .todo-card {
+    width: 80%;
   }
 }
+
+@media (max-width: 480px) {
+  .carousel-arrow {
+    padding: 14px 18px;
+    font-size: 28px;
+  }
+
+  .todo-card {
+    width: 90%;
+  }
+}
+
 
 /* ==================== Footer ==================== */
 .footer {
@@ -298,5 +334,4 @@ body {
   background: rgba(0, 0, 0, 0.4);
   color: #fff;
   text-align: center;
-  box-sizing: border-box;
 }

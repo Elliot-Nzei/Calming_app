@@ -1,26 +1,44 @@
-/* Body and layout */
-body {
+/* ========== GLOBAL RESET ========== */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* ========== BASE LAYOUT ========== */
+html, body {
+  height: 100dvh;
+  min-height: 100dvh;
+  width: 100vw;
+  overflow-x: hidden;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: url('../images/ai idea image.jpeg') center/cover no-repeat fixed;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  backdrop-filter: blur(8px);
   color: #e0e0e0;
-  overflow-x: hidden;
+  backdrop-filter: blur(8px);
 }
 
-/* Navbar - fixed and responsive */
+/* ========== SCREEN WRAPPER ========== */
+.screen-wrapper {
+  flex: 1;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 clamp(10px, 4vw, 30px);
+  position: relative;
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
+/* ========== NAVBAR ========== */
 .navbar-container {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background-color: transparent;
   padding: 10px 0;
+  background-color: transparent;
   z-index: 1000;
   display: flex;
   justify-content: center;
@@ -63,7 +81,26 @@ body {
   color: #fff;
 }
 
-/* Music Player Container */
+/* ========== RESPONSIVE NAVBAR ========== */
+@media (max-width: 768px) {
+  .navbar ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .navbar a.nav-button {
+    width: 100%;
+    text-align: center;
+    padding: 12px 0;
+  }
+
+  .screen-wrapper {
+    padding: 0 10px;
+  }
+}
+
+/* ========== MUSIC PLAYER CONTAINER ========== */
 .music-player {
   margin-top: 90px;
   width: 90vw;
@@ -73,50 +110,48 @@ body {
   border-radius: 24px;
   box-shadow: 0 12px 40px rgba(10, 40, 70, 0.8);
   backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
   color: #d4e8f7;
   text-align: center;
   user-select: none;
-  box-sizing: border-box;
 }
 
-/* Track Info */
+/* ========== TRACK INFO ========== */
 .track-info h3 {
   font-size: clamp(1.2rem, 3vw, 1.4rem);
   margin-bottom: 6px;
   font-weight: 600;
-  letter-spacing: 0.08em;
   color: #99cfe0;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 #track-title {
-  font-weight: 600;
   font-size: clamp(1rem, 2.5vw, 1.1rem);
+  font-weight: 600;
   color: #ade8f4;
   margin-bottom: 20px;
   letter-spacing: 0.03em;
 }
 
-/* Controls */
+/* ========== CONTROLS ========== */
 .controls {
   display: flex;
   align-items: center;
-  gap: 12px;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: 12px;
 }
 
 #play-btn {
   background: #2c5777;
-  border: none;
   color: #a1d6e2;
   padding: 14px 18px;
+  border: none;
   border-radius: 50%;
   font-size: 22px;
   cursor: pointer;
   box-shadow: 0 0 15px #6bc7c2aa;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+  transition: 0.3s ease;
   flex-shrink: 0;
 }
 
@@ -127,16 +162,15 @@ body {
 }
 
 #progress {
-  flex: 1 1 auto;
-  appearance: none;
+  flex: 1;
   height: 6px;
+  appearance: none;
   border-radius: 8px;
   background: #3a6a91;
-  outline: none;
   margin: 0 10px;
+  min-width: 120px;
   cursor: pointer;
   box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.2);
-  min-width: 120px;
 }
 
 #progress::-webkit-slider-thumb {
@@ -145,9 +179,8 @@ body {
   height: 18px;
   border-radius: 50%;
   background: #7fffd4;
-  cursor: pointer;
   box-shadow: 0 0 10px #7fffd4aa;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+  transition: 0.3s ease;
 }
 
 #progress::-webkit-slider-thumb:hover {
@@ -155,27 +188,25 @@ body {
   box-shadow: 0 0 15px #40e0d0cc;
 }
 
-/* Time displays */
+/* ========== TIME LABELS ========== */
 #current-time,
 #duration {
   font-size: clamp(0.7rem, 1.5vw, 0.9rem);
   color: #8abbd1;
   min-width: 40px;
-  user-select: none;
   flex-shrink: 0;
 }
 
-/* Track List Container */
+/* ========== TRACK LIST ========== */
 .track-list-container {
   margin-top: 28px;
-  background-color: rgba(50, 70, 90, 0.25);
-  border-radius: 16px;
   padding: 12px 16px;
   max-height: 170px;
   overflow-y: auto;
+  background-color: rgba(50, 70, 90, 0.25);
+  border-radius: 16px;
   box-shadow: inset 0 0 20px rgba(150, 220, 230, 0.2);
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;
 }
 
 .track-list-container::-webkit-scrollbar {
@@ -187,25 +218,23 @@ body {
   font-size: clamp(1rem, 2.5vw, 1.1rem);
   font-weight: 600;
   color: #aad4f5;
-  letter-spacing: 0.02em;
   text-align: left;
 }
 
+/* ========== TRACK OPTION ========== */
 #track-list {
   list-style: none;
   padding-left: 0;
-  margin: 0;
 }
 
-/* Track option */
 .track-option {
+  font-size: clamp(0.9rem, 2vw, 1rem);
   padding: 10px 14px;
   color: #c1dff2;
-  cursor: pointer;
-  transition: background 0.25s ease, color 0.25s ease;
-  border-radius: 8px;
   font-weight: 500;
-  font-size: clamp(0.9rem, 2vw, 1rem);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: 0.25s ease;
 }
 
 .track-option:hover,
@@ -215,13 +244,12 @@ body {
   box-shadow: 0 0 12px #63b4cfaa;
 }
 
-/* Responsive adjustments */
+/* ========== MOBILE RESPONSIVE FIXES ========== */
 @media (max-width: 480px) {
   .music-player {
     margin-top: 70px;
     padding: 20px 16px 30px;
     width: 95vw;
-    max-width: none;
     border-radius: 16px;
   }
 
@@ -252,5 +280,16 @@ body {
   .track-option {
     font-size: 0.85rem;
     padding: 8px 12px;
+  }
+
+  .navbar ul {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .navbar a.nav-button {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
   }
 }

@@ -2,6 +2,18 @@ const chatBox = document.getElementById("chat-box");
 const chatForm = document.getElementById("chat-form");
 const messageInput = document.getElementById("message-input");
 
+// Generate or retrieve client ID (persistent per user)
+function getClientId() {
+  let clientId = localStorage.getItem("clientId");
+  if (!clientId) {
+    clientId = 'client-' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem("clientId", clientId);
+  }
+  return clientId;
+}
+
+const clientId = getClientId();
+
 // Load messages from backend
 async function loadMessages() {
   try {
@@ -10,10 +22,17 @@ async function loadMessages() {
     const data = await res.json();
 
     chatBox.innerHTML = "";
-    data.messages.forEach(msg => {
-      const p = document.createElement("p");
-      p.textContent = msg;
-      chatBox.appendChild(p);
+    data.messages.forEach(msgObj => {
+      const div = document.createElement("div");
+      div.classList.add("chat-message");
+      div.textContent = msgObj.text;
+
+      if (msgObj.sender === clientId) {
+        div.classList.add("sent");
+      } else {
+        div.classList.add("received");
+      }
+      chatBox.appendChild(div);
     });
     chatBox.scrollTop = chatBox.scrollHeight;
   } catch (error) {
@@ -32,7 +51,7 @@ chatForm.addEventListener("submit", async e => {
     const res = await fetch("http://localhost:8000/api/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, sender: clientId }),
     });
     if (!res.ok) throw new Error("Failed to send message");
 
@@ -44,11 +63,17 @@ chatForm.addEventListener("submit", async e => {
   }
 });
 
-// Poll messages every 3 seconds
+// Send message on Enter key (without Shift)
+messageInput.addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    chatForm.requestSubmit();
+  }
+});
+
 loadMessages();
 setInterval(loadMessages, 3000);
 
-// Global error handling
 window.addEventListener("error", event => {
   console.error("JS Error:", event.message);
   appendError(`JS Error: ${event.message}`);
@@ -64,7 +89,6 @@ window.addEventListener("offline", () => {
   appendError("⚠️ You are offline. Messages won’t be sent.");
 });
 
-// Append styled error to chat
 function appendError(msg) {
   const errorMsg = document.createElement("p");
   errorMsg.textContent = msg;

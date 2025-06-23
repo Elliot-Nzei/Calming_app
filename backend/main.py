@@ -1,29 +1,55 @@
-# backend/main.py
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from pathlib import Path
-import os
+import json
 
 app = FastAPI()
 
-# CORS middleware - adjust allow_origins in production
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  
+    allow_origins=["*"],  # adjust for production
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Paths
 FRONTEND_DIR = Path("frontend")
+TEMPLATE_DIR = FRONTEND_DIR / "pages"
+USER_DB = Path("data/users.json")
 MUSIC_FOLDER = FRONTEND_DIR / "assets" / "music"
 
-# In-memory message store for chat
-messages = []
+USER_DB.parent.mkdir(parents=True, exist_ok=True)
+if not USER_DB.exists():
+    USER_DB.write_text(json.dumps({}, indent=2))
 
-# API to list music tracks
+messages = []
+templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
+
+@app.get("/")
+def show_startup():
+    return templates.TemplateResponse("startup.html", {"request": {}})
+
+@app.post("/submit-user")
+async def submit_user(request: Request, name: str = Form(...), email: str = Form(...)):
+    users = json.loads(USER_DB.read_text())
+    users[email] = {"name": name}
+    USER_DB.write_text(json.dumps(users, indent=2))
+    response = RedirectResponse(url="/pages/index.html", status_code=303)
+    response.set_cookie("user_email", email)
+    return response
+
+@app.get("/api/user-info")
+async def get_user_info(request: Request):
+    email = request.cookies.get("user_email")
+    if not email:
+        return JSONResponse(status_code=404, content={"error": "No user cookie found."})
+    users = json.loads(USER_DB.read_text())
+    if email not in users:
+        return JSONResponse(status_code=404, content={"error": "User not found."})
+    return {"name": users[email]["name"]}
+
 @app.get("/api/music-tracks")
 def list_music_tracks():
     if not MUSIC_FOLDER.exists():
@@ -31,24 +57,22 @@ def list_music_tracks():
     tracks = [f.name for f in MUSIC_FOLDER.iterdir() if f.is_file() and f.suffix == ".mp3"]
     return {"tracks": tracks}
 
-# Chat GET messages
 @app.get("/api/messages")
 def get_messages():
     return {"messages": messages[-100:]}
 
-# Chat POST message
 @app.post("/api/messages")
 async def post_message(request: Request):
     data = await request.json()
     message = data.get("message", "").strip()
+    sender = data.get("sender", "").strip()
     if not message:
         return JSONResponse(status_code=400, content={"error": "Empty message"})
+    if not sender:
+        return JSONResponse(status_code=400, content={"error": "Missing sender id"})
     message = message[:250].replace("\n", " ")
-    messages.append(message)
+    messages.append({"text": message, "sender": sender})
     return {"status": "success"}
 
-# Serve music static files (allow frontend to access songs)
 app.mount("/assets/music", StaticFiles(directory=MUSIC_FOLDER), name="music")
-
-# Serve all frontend static files
 app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
