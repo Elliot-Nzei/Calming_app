@@ -1,65 +1,66 @@
-/* Reset + base layout */
-* {
+html, body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  height: 100vh;            /* full viewport height */
+  min-height: 100vh;       /* ensure it covers full height */
+  font-family: 'Arial', sans-serif;
+  background-image: url('../images/ai\ idea\ image.jpeg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;         /* prevent scrolling */
 }
 
-body {
-  font-family: Arial, sans-serif;
-  color: #fff;
-  line-height: 1.6;
+.main-wrapper {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* screen-wrapper fills remaining space */
+.screen-wrapper {
+  flex: 1 1 auto;           /* grow and shrink as needed */
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
   position: relative;
+  overflow: auto;           /* allow internal scroll only if content overflows */
+  box-sizing: border-box;
   min-height: 100vh;
 }
 
-/* Background image styling */
-.background-image {
+
+
+
+
+
+
+.navbar-container {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  z-index: -1;
-  opacity: 0.9;
-  pointer-events: none;
+  width: 100%;
+  background-color: transparent;
+  padding: 10px 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
 }
-
-/* Navigation menu container */
-.navbar-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: transparent;
-    padding: 10px 20px;
-    z-index: 1000;
-    display: flex;
-    justify-content: center; /* center nav horizontally */
-}
-
-/* Navigation list wrapper */
 .navbar {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 .navbar ul {
   list-style: none;
   display: flex;
   gap: 40px;
-  margin: 0;
-  padding: 0;
 }
-
-/* Navigation link buttons (now using icons) */
 .navbar a.nav-button {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px; /* adjust icon size */
+  font-size: 20px;
   text-decoration: none;
   color: white;
   padding: 10px 16px;
@@ -68,27 +69,19 @@ body {
   width: 45px;
   height: 45px;
 }
-
-/* Hover effect for nav icons */
 .navbar a.nav-button:hover {
   background-color: #555;
 }
-
-/* Active state styling */
 .navbar li.active a.nav-button {
   background-color: #888;
   color: #fff;
 }
-
-
-
-/* Responsive design for smaller screens */
 @media (max-width: 768px) {
   .navbar ul {
     flex-direction: column;
     align-items: center;
+    gap: 20px;
   }
-  
   .navbar a.nav-button {
     width: 100%;
     text-align: center;
@@ -97,42 +90,236 @@ body {
 }
 
 
-/*MAIN*/
+
+
+
+
+
+
+
+
+/* Content styles */
+.content {
+  max-width: 900px;
+  margin: 90px auto 60px;
+  padding: 0 20px;
+  color: #fff; /* Assuming background is dark */
+  font-family: 'Arial', sans-serif;
+  line-height: 1.5;
+}
+
 .welcome-container {
-    display: flex;
-    flex-direction: column;
-    top: 10px;
-    margin-top: 100px;
-    height: calc(100vh - 40px);
-    padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: inherit;
 }
 
 .welcome-container h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
+  font-size: 2.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 0;
+}
+
+#welcome-container time#current-date {
+  font-size: 1.25rem;
+  color: #ccc;
+  font-weight: 500;
+  margin-left: 5px;
 }
 
 .notification-container {
-    position: absolute;
-    top: 200px;
-    padding: 10px 20px;
-    background-color: #fffdfd;
-    color: #000;
-    border-radius: 5px;
-    z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 25px;
+  background-color: #f9f9f9;
+  color: #222;
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+  max-width: 100%;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.notification-container h2 {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+  color: #111;
 }
 
 .notification-container p {
-    margin: 0;
-    font-size: 1rem;
+  margin: 0;
+  line-height: 1.4;
+  color: #444;
 }
 
-.todo-container{
-    top: 350px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .content {
+    padding: 0 12px;
+    margin: 20px auto 40px;
+  }
+
+  .welcome-container h1 {
+    font-size: 2rem;
+  }
+
+  .notification-container {
+    padding: 15px 18px;
+  }
+}
+
+
+
+
+
+
+
+
+
+.todo-section {
+  position: relative;
+  max-width: 100%;  /* slightly wider */
+  margin: 160px auto 0px;
+  padding: 25px 35px;
+  background-color: transparent;  /* deeper dark */
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  color: #fff;
+  box-sizing: border-box;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  user-select: none;
+}
+
+.todo-heading {
+  margin: 0 0 25px 0;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #e0e0e0;
+  text-align: left; /* changed from center */
+}
+
+
+.todo-carousel-wrapper {
+  position: relative;
+  width: 80%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin: 0 auto; /* centers horizontally */
+}
+
+.todo-slider {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  width: 100%;
+  padding-bottom: 5px; /* room for hidden scrollbar */
+  outline: none; /* remove focus outline on scroll container */
+    -ms-overflow-style: none; /* for IE and Edge */
+}
+
+.todo-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.todo-card {
+  flex: 0 0 100%;
+  max-width: 95%;
+  background-color: rgba(30, 30, 30, 0.4); /* semi-transparent dark */
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  border-radius: 14px;
+  padding: 25px 30px;
+  scroll-snap-align: start;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #f0f0f0; /* lighter text for contrast */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  user-select: text;
+}
+
+
+.todo-card:hover,
+.todo-card:focus {
+  transform: scale(1.07);
+  background-color: #2b2b2b;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.9);
+  outline: none;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(30, 30, 30, 0.85);
+  color: #ddd;
+  border: none;
+  padding: 12px 18px;
+  font-size: 28px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.3s ease, color 0.3s ease;
+  user-select: none;
+  z-index: 20;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+.carousel-arrow:hover,
+.carousel-arrow:focus {
+  background: #444;
+  color: #fff;
+  outline: none;
+}
+
+.carousel-arrow.left {
+  left: -45px;
+}
+
+.carousel-arrow.right {
+  right: -45px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .todo-section {
+    max-width: 90%;
+    padding: 20px;
+  }
+  .todo-heading {
+    font-size: 1.6rem;
+  }
+  .todo-card {
+    font-size: 1rem;
+    padding: 20px 25px;
+  }
+  .carousel-arrow.left {
+    left: -30px;
+  }
+  .carousel-arrow.right {
+    right: -30px;
+  }
+}
+
+
+
+
+/* Footer stays at bottom, no shrinking */
+.footer {
+ margin-top: auto;         /* push footer to bottom */
+  width: 100%;
+  padding: 0px;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  text-align: center;
+  position: relative;
+  box-sizing: border-box;
 }

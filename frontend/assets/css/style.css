@@ -1,39 +1,44 @@
 html, body {
   margin: 0;
   padding: 0;
-  height: 100vh;            /* full viewport height */
+  height: 100vh;                /* changed from 100% to 100vh for consistency */
+  min-height: 100vh;
   font-family: 'Arial', sans-serif;
-  background-image: url('../images/ai\ idea\ image.jpeg');
+  background-image: url('../images/ai idea image.jpeg');
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   display: flex;
   flex-direction: column;
-  overflow: hidden;         /* prevent scrolling */
+  overflow-x: hidden;
+}
+
+body {
+  overflow-y: auto;
 }
 
 .main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   background: rgba(0, 0, 0, 0.4);
+  width: 100%;
 }
 
-/* screen-wrapper fills remaining space */
+/* ==================== Layout Container ==================== */
 .screen-wrapper {
-  flex: 1 1 auto;           /* grow and shrink as needed */
+  flex: 1;
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 clamp(10px, 4vw, 30px);
   position: relative;
-  overflow: auto;           /* allow internal scroll only if content overflows */
+  overflow-y: auto;
   box-sizing: border-box;
   min-height: 100vh;
 }
 
-
-
-
-
-
-
+/* ==================== Navbar ==================== */
 .navbar-container {
   position: fixed;
   top: 0;
@@ -45,65 +50,68 @@ html, body {
   display: flex;
   justify-content: center;
 }
+
 .navbar {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .navbar ul {
   list-style: none;
   display: flex;
-  gap: 40px;
+  gap: 2vw;
+  padding: 0;
+  margin: 0;
 }
+
 .navbar a.nav-button {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px;
+  font-size: 1.2rem;
   text-decoration: none;
   color: white;
   padding: 10px 16px;
   border-radius: 8px;
   transition: background 0.3s ease;
-  width: 45px;
+  min-width: 45px;
   height: 45px;
 }
+
 .navbar a.nav-button:hover {
   background-color: #555;
 }
+
 .navbar li.active a.nav-button {
   background-color: #888;
   color: #fff;
 }
+
 @media (max-width: 768px) {
   .navbar ul {
     flex-direction: column;
     align-items: center;
     gap: 20px;
   }
+
   .navbar a.nav-button {
     width: 100%;
     text-align: center;
     padding: 12px 0;
   }
+
+  .screen-wrapper {
+    padding: 0 10px;
+  }
 }
 
-
-
-
-
-
-
-
-
-
-/* Content styles */
+/* ==================== Content ==================== */
 .content {
   max-width: 900px;
-  margin: 90px auto 60px;
-  padding: 0 20px;
-  color: #fff; /* Assuming background is dark */
-  font-family: 'Arial', sans-serif;
+  margin: 80px auto 40px;
+  padding: 0 clamp(10px, 4vw, 20px);
+  color: #fff;
   line-height: 1.5;
 }
 
@@ -111,23 +119,29 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  color: inherit;
+  overflow-y: auto;             /* allow vertical scrolling if needed */
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE and Edge */
+}
+
+/* Hide scrollbar for WebKit browsers (Chrome, Safari, Opera) */
+.welcome-container::-webkit-scrollbar {
+  display: none;
 }
 
 .welcome-container h1 {
-  font-size: 2.8rem;
+  font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 700;
-  line-height: 1.1;
   margin-bottom: 0;
 }
 
 #welcome-container time#current-date {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   color: #ccc;
   font-weight: 500;
-  margin-left: 5px;
 }
 
+/* ==================== Notification ==================== */
 .notification-container {
   margin-top: 25px;
   background-color: #f9f9f9;
@@ -135,9 +149,7 @@ html, body {
   padding: 20px 25px;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
-  max-width: 100%;
   font-size: 1rem;
-  font-weight: 400;
 }
 
 .notification-container h2 {
@@ -153,42 +165,17 @@ html, body {
   color: #444;
 }
 
-/* Responsive tweaks */
-@media (max-width: 480px) {
-  .content {
-    padding: 0 12px;
-    margin: 20px auto 40px;
-  }
-
-  .welcome-container h1 {
-    font-size: 2rem;
-  }
-
-  .notification-container {
-    padding: 15px 18px;
-  }
-}
-
-
-
-
-
-
-
-
-
+/* ==================== Todo Section ==================== */
 .todo-section {
   position: relative;
-  max-width: 100%;  /* slightly wider */
-  margin: 160px auto 0px;
-  padding: 25px 35px;
-  background-color: transparent;  /* deeper dark */
+  max-width: 100%;
+  margin: clamp(60px, 10vh, 120px) auto 2vh;
+  padding: 4vh 5vw;
+  background-color: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(10px);
-  border-radius: 14px;
+  border-radius: 15px;
   color: #fff;
-  box-sizing: border-box;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-  user-select: none;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
 }
 
 .todo-heading {
@@ -197,17 +184,15 @@ html, body {
   font-weight: 700;
   letter-spacing: 0.03em;
   color: #e0e0e0;
-  text-align: left; /* changed from center */
+  text-align: left;
 }
 
-
 .todo-carousel-wrapper {
-  position: relative;
-  width: 80%;
+  width: 100%;
   display: flex;
   align-items: center;
   overflow: hidden;
-  margin: 0 auto; /* centers horizontally */
+  margin: 0 auto;
 }
 
 .todo-slider {
@@ -218,9 +203,9 @@ html, body {
   scroll-behavior: smooth;
   scrollbar-width: none;
   width: 100%;
-  padding-bottom: 5px; /* room for hidden scrollbar */
-  outline: none; /* remove focus outline on scroll container */
-    -ms-overflow-style: none; /* for IE and Edge */
+  padding-bottom: 5px;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .todo-slider::-webkit-scrollbar {
@@ -230,31 +215,28 @@ html, body {
 .todo-card {
   flex: 0 0 100%;
   max-width: 95%;
-  background-color: rgba(30, 30, 30, 0.4); /* semi-transparent dark */
+  background-color: rgba(30, 30, 30, 0.4);
   backdrop-filter: blur(10px) saturate(180%);
   -webkit-backdrop-filter: blur(10px) saturate(180%);
   border-radius: 14px;
-  padding: 25px 30px;
+  padding: clamp(20px, 5vw, 30px);
   scroll-snap-align: start;
-  cursor: pointer;
   transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
   font-size: 1.125rem;
   font-weight: 600;
-  color: #f0f0f0; /* lighter text for contrast */
+  color: #f0f0f0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-  user-select: text;
 }
-
 
 .todo-card:hover,
 .todo-card:focus {
   transform: scale(1.07);
   background-color: #2b2b2b;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.9);
-  outline: none;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9);
 }
 
+/* ==================== Carousel Arrows ==================== */
 .carousel-arrow {
   position: absolute;
   top: 50%;
@@ -266,17 +248,14 @@ html, body {
   font-size: 28px;
   cursor: pointer;
   border-radius: 50%;
-  transition: background 0.3s ease, color 0.3s ease;
-  user-select: none;
   z-index: 20;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 .carousel-arrow:hover,
 .carousel-arrow:focus {
   background: #444;
   color: #fff;
-  outline: none;
 }
 
 .carousel-arrow.left {
@@ -287,43 +266,37 @@ html, body {
   right: -45px;
 }
 
-/* Responsive adjustments */
+/* ==================== Responsive Carousel ==================== */
 @media (max-width: 768px) {
   .todo-section {
-    max-width: 90%;
     padding: 20px;
   }
+
   .todo-heading {
     font-size: 1.6rem;
   }
+
   .todo-card {
     font-size: 1rem;
     padding: 20px 25px;
   }
+
   .carousel-arrow.left {
     left: -30px;
   }
+
   .carousel-arrow.right {
     right: -30px;
   }
 }
 
-
-
-
-/* Footer stays at bottom, no shrinking */
+/* ==================== Footer ==================== */
 .footer {
- margin-top: auto;         /* push footer to bottom */
+  margin-top: auto;
   width: 100%;
-  padding: 0px;
+  padding: 10px;
   background: rgba(0, 0, 0, 0.4);
   color: #fff;
   text-align: center;
-  position: relative;
   box-sizing: border-box;
 }
-
-
-
-
-

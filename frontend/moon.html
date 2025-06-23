@@ -1,12 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Anonymous Chat - Moon</title>
+
+<!-- Font Awesome -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
+<!-- Custom CSS -->
+<link rel="stylesheet" href="assets/css/moon.css" />
 </head>
 <body>
-    <h1>Welcome to the Moon Page</h1>
-    <p>This page is dedicated to all things related to the moon.</p>
+
+<!-- Navbar -->
+<div class="navbar-container">
+  <div class="navbar">
+    <ul>
+      <li><a class="nav-button" href="index.html"><i class="fas fa-home"></i></a></li>
+      <li class="active"><a class="nav-button" href="moon.html"><i class="fas fa-moon"></i></a></li>
+      <li><a class="nav-button" href="#"><i class="far fa-circle"></i></a></li>
+      <li><a class="nav-button" href="music.html"><i class="fas fa-music"></i></a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Chat container -->
+<div class="main-content">
+  <div class="chat-container">
+    <h2>Anonymous Moon Chat</h2>
+    <div id="chat-box" class="chat-box"></div>
+
+    <form id="chat-form">
+      <textarea
+        id="message-input"
+        placeholder="Type your anonymous message here..."
+        rows="3"
+        maxlength="250"
+        required
+      ></textarea>
+      <button type="submit"><i class="fas fa-paper-plane"></i> Send</button>
+    </form>
+  </div>
+</div>
+
+
+<script src="assets/js/moon.js"></script>
 </body>
+
+<footer class="footer">
+  <p>&copy; 2025 Elliot. All rights reserved.</p>
 </html>
