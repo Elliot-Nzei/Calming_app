@@ -61,11 +61,22 @@ clean:
 	@echo ">>> Cleaning virtual environment..."
 	@$(VENV_REMOVE)
 
+# Cross-platform Git setup
+ifeq ($(OS),Windows_NT)
+	SHELL := powershell.exe
+	GIT_CHECK_REMOTE = if (-not (git remote | Select-String -Pattern '^origin$$')) { git remote add origin https://github.com/Elliot-Nzei/Calming_app.git }
+	GIT_INIT = if (-not (Test-Path .git)) { git init }
+else
+	SHELL := /bin/bash
+	GIT_CHECK_REMOTE = if ! git remote | grep -q "^origin$$"; then git remote add origin https://github.com/Elliot-Nzei/Calming_app.git; fi
+	GIT_INIT = if [ ! -d .git ]; then git init; fi
+endif
+
 git-init:
 	@echo ">>> Setting up Git..."
-	@git init
+	@$(GIT_INIT)
 	@git add .
-	@git commit -m "update"
-	@git remote add origin https://github.com/Elliot-Nzei/Calming_app.git
+	@-git commit -m "update" || echo "Nothing to commit"
+	@$(GIT_CHECK_REMOTE)
 	@git branch -M main
 	@git push -u origin main
