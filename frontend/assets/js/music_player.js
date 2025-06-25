@@ -10,24 +10,30 @@ let isPlaying = false;
 let currentTrackIndex = 0;
 let tracks = [];
 
-// Load a track by filename and update UI
-function loadTrack(fileName, index = 0) {
+// Load a track and optionally autoplay it
+function loadTrack(fileName, index = 0, autoplay = false) {
   audio.src = `assets/music/${fileName}`;
   trackTitle.textContent = fileName.replace(".mp3", "").replace(/_/g, " ");
   audio.load();
-
-  // Reset UI and state
   isPlaying = false;
   playBtn.innerHTML = '<i class="fas fa-play"></i>';
   progress.value = 0;
   currentTimeDisplay.textContent = "0:00";
   durationDisplay.textContent = "0:00";
   currentTrackIndex = index;
-
   updateActiveTrackUI();
+
+  // Auto-play after loading
+  if (autoplay) {
+    audio.play().then(() => {
+      isPlaying = true;
+      playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    }).catch(err => {
+      console.warn("Autoplay blocked:", err);
+    });
+  }
 }
 
-// Update visual highlight of the current track in the list
 function updateActiveTrackUI() {
   const options = trackList.querySelectorAll(".track-option");
   options.forEach((el, idx) => {
@@ -35,44 +41,34 @@ function updateActiveTrackUI() {
   });
 }
 
-// Play or pause toggle
 function togglePlay() {
-  if (!audio.src) return; // No track loaded, do nothing
-
+  if (!audio.src) return;
   if (isPlaying) {
     audio.pause();
     playBtn.innerHTML = '<i class="fas fa-play"></i>';
   } else {
-    audio.play().catch(err => {
-      console.warn("Playback prevented:", err);
-    });
+    audio.play().catch(err => console.warn("Playback prevented:", err));
     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
   }
   isPlaying = !isPlaying;
 }
 
-// Update progress bar and time displays
 audio.addEventListener("timeupdate", () => {
   if (!audio.duration) return;
-
   progress.value = (audio.currentTime / audio.duration) * 100 || 0;
   currentTimeDisplay.textContent = formatTime(audio.currentTime);
   durationDisplay.textContent = formatTime(audio.duration);
 });
 
-// User changes progress input -> update audio current time
 progress.addEventListener("input", () => {
   if (!audio.duration) return;
   audio.currentTime = (progress.value / 100) * audio.duration;
 });
 
-// When track ends, optionally auto-move to next track and play
 audio.addEventListener("ended", () => {
   if (currentTrackIndex + 1 < tracks.length) {
-    loadTrack(tracks[currentTrackIndex + 1], currentTrackIndex + 1);
-    togglePlay();
+    loadTrack(tracks[currentTrackIndex + 1], currentTrackIndex + 1, true);
   } else {
-    // End of playlist
     isPlaying = false;
     playBtn.innerHTML = '<i class="fas fa-play"></i>';
     progress.value = 0;
@@ -88,7 +84,7 @@ function formatTime(time) {
 
 playBtn.addEventListener("click", togglePlay);
 
-// Fetch track list from backend and populate UI
+// Load track list from backend
 fetch("http://localhost:8000/api/music-tracks")
   .then(res => res.json())
   .then(data => {
@@ -96,21 +92,20 @@ fetch("http://localhost:8000/api/music-tracks")
     trackList.innerHTML = "";
     tracks.forEach((track, idx) => {
       const li = document.createElement("li");
-      li.textContent = track.replace(".mp3", "").replace(/_/g, " ");
+      const label = track.replace(".mp3", "").replace(/_/g, " ");
+      li.textContent = label;
       li.classList.add("track-option");
       li.setAttribute("tabindex", "0");
       li.setAttribute("role", "button");
-      li.addEventListener("click", () => loadTrack(track, idx));
+      li.setAttribute("aria-label", `Play ${label}`);
+      li.setAttribute("title", `Play ${label}`);
+      li.addEventListener("click", () => loadTrack(track, idx, true));
       li.addEventListener("keypress", e => {
-        if (e.key === "Enter" || e.key === " ") {
-          loadTrack(track, idx);
-        }
+        if (e.key === "Enter" || e.key === " ") loadTrack(track, idx, true);
       });
       trackList.appendChild(li);
     });
-    if (tracks.length > 0) {
-      loadTrack(tracks[0], 0);
-    }
+    if (tracks.length > 0) loadTrack(tracks[0], 0);
   })
   .catch(err => {
     console.error("Failed to load track list:", err);

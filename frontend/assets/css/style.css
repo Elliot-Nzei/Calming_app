@@ -2,13 +2,18 @@
   box-sizing: border-box;
 }
 
+* {
+  scrollbar-color: initial;
+  scrollbar-width: initial;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   height: 100dvh;
   min-height: 100dvh;
   font-family: 'Arial', sans-serif;
-  background-image: url('../images/ai idea image.jpeg');
+  background-image: url('../images/ai\ idea\ image.jpeg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -20,6 +25,13 @@ html, body {
 
 body {
   overflow-y: auto;
+}
+
+
+html,
+:host {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%; /* Added for Chrome, Edge, Firefox support */
 }
 
 /* ==================== Main Layout ==================== */
@@ -248,6 +260,13 @@ body {
   cursor: pointer;
   display: inline-block;
   text-decoration: none;       /* Ensure anchor text isn't underlined */
+  -webkit-backdrop-filter: blur(10px) saturate(180%); /* Added for Safari */
+  backdrop-filter: blur(10px) saturate(180%);
+  
+  -webkit-user-select: none;  /* Added for Safari */
+  -moz-user-select: none;     /* Optional for Firefox */
+  -ms-user-select: none;      /* Optional for IE11 */
+  user-select: none;
 }
 
 .todo-card:active {
@@ -283,7 +302,12 @@ body {
     0 0 40px rgba(0, 255, 225, 0.2);
   transition: all 0.3s ease;
   backdrop-filter: blur(6px) saturate(160%);
-  -webkit-backdrop-filter: blur(6px) saturate(160%);
+  -webkit-backdrop-filter: blur(6px) saturate(160%); /* Added for Safari */
+  backdrop-filter: blur(6px) saturate(160%);
+  
+  -webkit-user-select: none;  /* Added for Safari */
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
   display: flex;
   align-items: center;

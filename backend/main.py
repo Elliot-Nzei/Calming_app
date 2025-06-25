@@ -37,6 +37,10 @@ def show_startup(request: Request):
 
 @app.post("/submit-user")
 async def submit_user(request: Request, name: str = Form(...), email: str = Form(...)):
+    # Clean input
+    name = name.strip()
+    email = email.strip().lower()
+
     # Load current users
     users = json.loads(USER_DB.read_text())
     users[email] = {"name": name}
@@ -44,7 +48,7 @@ async def submit_user(request: Request, name: str = Form(...), email: str = Form
 
     # Redirect to index.html and set cookie
     response = RedirectResponse(url="/index.html", status_code=303)
-    response.set_cookie(key="user_email", value=email)
+    response.set_cookie(key="user_email", value=email, httponly=True)
     return response
 
 @app.get("/api/user-info")

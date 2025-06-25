@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Music Player</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="assets/css/music_player.css" />
 </head>
 <body>
@@ -12,31 +12,33 @@
   <div class="navbar-container">
     <div class="navbar">
       <ul>
-        <li><a class="nav-button" href="index.html"><i class="fas fa-home"></i></a></li>
-        <li><a class="nav-button" href="moon.html"><i class="fas fa-moon"></i></a></li>
-        <li><a class="nav-button" href="mental.html"><i class="far fa-circle"></i></a></li>
-        <li class="active"><a class="nav-button" href="music.html"><i class="fas fa-music"></i></a></li>
+        <li><a class="nav-button" href="index.html" aria-label="Home" title="Home"><i class="fas fa-home"></i></a></li>
+        <li><a class="nav-button" href="moon.html" aria-label="Moon" title="Moon"><i class="fas fa-moon"></i></a></li>
+        <li><a class="nav-button" href="mental.html" aria-label="Mental Health" title="Mental Health"><i class="far fa-circle"></i></a></li>
+        <li class="active"><a class="nav-button" href="music.html" aria-label="Music" title="Music"><i class="fas fa-music"></i></a></li>
       </ul>
     </div>
   </div>
 
   <!-- Music Player -->
-    <div class="music-player">
+  <div class="music-player">
     <div class="track-info">
         <h3>Now Playing</h3>
         <p id="track-title">Rainforest Ambience</p>
     </div>
     <audio id="audio" src=""></audio>
     <div class="controls">
-        <button id="play-btn"><i class="fas fa-play"></i></button>
-        <input type="range" id="progress" value="0" />
+        <button id="play-btn" aria-label="Play or Pause Audio" title="Play or Pause Audio">
+          <i class="fas fa-play"></i>
+        </button>
+        <input type="range" id="progress" value="0" aria-label="Audio progress slider" title="Audio progress" />
         <span id="current-time">0:00</span> / <span id="duration">0:00</span>
     </div>
     <div class="track-list-container">
         <h4>Choose a Track</h4>
         <ul id="track-list"></ul>
     </div>
-    </div>
+  </div>
 
 
   <script src="assets/js/music_player.js"></script>

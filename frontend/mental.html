@@ -4,36 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Daily Mental Wellness</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    crossorigin="anonymous"
+  />
   <link rel="stylesheet" href="assets/css/mental.css" />
 </head>
+<body id="body">
   <!-- Navbar -->
   <div class="navbar-container">
     <div class="navbar">
       <ul>
         <li><a class="nav-button" href="index.html"><i class="fas fa-home"></i></a></li>
-        <li><a class="nav-button" href="./moon.html"><i class="fas fa-moon"></i></a></li>
+        <li><a class="nav-button" href="moon.html"><i class="fas fa-moon"></i></a></li>
         <li class="active"><a class="nav-button" href="mental.html"><i class="far fa-circle"></i></a></li>
-        <li><a class="nav-button" href="../frontend/music.html"><i class="fas fa-music"></i></a></li>
+        <li><a class="nav-button" href="music.html"><i class="fas fa-music"></i></a></li>
       </ul>
     </div>
   </div>
-    
-    <body id="body">
-        <div class="main-wrapper">
-        <div class="mental-wrapper">
-            <div class="mental-header">
-            <h1>Good Night</h1>
-            <div class="date">25 June, 2025</div>
-            </div>
-            <div class="mental-schedule">
-            <h2>Programmation</h2>
-            <div id="activity-schedule"></div>
-            </div>
-        </div>
-        </div>
 
+  <main class="main-wrapper">
+    <div class="mental-wrapper">
+      <div class="mental-header">
+        <h1>Task Scheduled</h1>
+        <div class="date" id="today-date"></div>
+      </div>
+      <div class="mental-schedule">
+        <h2>Today's Tasks</h2>
+        <ul id="task-list"></ul>
+      </div>
+    </div>
+  </main>
 
-    <script src="assets/js/mental.js"></script>
-    </body>
+  <footer>
+    <!-- Reserved for future use -->
+  </footer>
 
+  <script src="assets/js/mental.js"></script>
+</body>
 </html>

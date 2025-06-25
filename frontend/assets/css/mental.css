@@ -1,32 +1,51 @@
-/* ==================== GLOBAL ==================== */
-body {
+/* ==================== RESET & GLOBAL ==================== */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
   margin: 0;
   padding: 0;
   height: 100dvh;
-  width: 100vw;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #f1f1f1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: url('../images/ai\ idea\ image.jpeg') center/cover no-repeat fixed;
-  transition: background-image 0.5s ease-in-out;
-  backdrop-filter: blur(8px);
+  min-height: 100dvh;
+  font-family: 'Arial', sans-serif;
+  background-image: url('../images/ai\ idea\ image.jpeg'); /* Corrected path with hyphens */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  color: #f1f1f1;
 }
 
-/* ==================== MAIN WRAPPER ==================== */
+body {
+  overflow-y: auto;
+}
+
+/* ==================== MAIN LAYOUT ==================== */
 .main-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
   background: rgba(0, 0, 0, 0.4);
   width: 100%;
-  min-height: 100vh;
-  overflow-y: auto;
 }
 
-/* ==================== NAVBAR ==================== */
+/* ==================== Layout Container ==================== */
+.screen-wrapper {
+  flex: 1;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 clamp(10px, 4vw, 30px);
+  position: relative;
+  overflow-y: auto;
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+
+/* ==================== Navbar ==================== */
 .navbar-container {
   position: fixed;
   top: 0;
@@ -48,7 +67,7 @@ body {
 .navbar ul {
   list-style: none;
   display: flex;
-  flex-direction: row;
+  flex-direction: row; /* Force horizontal always */
   gap: 2vw;
   padding: 0;
   margin: 0;
@@ -77,92 +96,140 @@ body {
   color: #fff;
 }
 
+/* REMOVE mobile-specific column layout */
+@media (max-width: 768px) {
+  .navbar ul {
+    flex-direction: row; /* Force horizontal even on small screens */
+    justify-content: center;
+    align-items: center;
+    gap: 2vw;
+  }
+
+  .navbar a.nav-button {
+    width: auto; /* Allow button to size naturally */
+    text-align: center;
+    padding: 10px 16px;
+  }
+
+  .screen-wrapper {
+    padding: 0 10px;
+  }
+}
+
 /* ==================== MENTAL WRAPPER ==================== */
 .mental-wrapper {
-  width: 90%;
-  max-width: 460px;
-  background: rgba(0, 0, 0, 0.45);
-  padding: 36px 24px;
-  border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(16px);
-  margin-top: 100px;
-  margin-bottom: 60px;
-  animation: fadeIn 0.4s ease-in-out;
+  width: 92%;
+  max-width: 600px;
+  background: none;
+  padding: 24px 0;
+  border-radius: 0;
+  margin: auto;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 /* ==================== HEADER ==================== */
 .mental-header {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 
 .mental-header h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 6px;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 8px;
   color: #ffffff;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 .mental-header .date {
   font-size: 1rem;
-  color: #ccc;
+  color: #bbbbbb;
 }
 
-/* ==================== SCHEDULE ==================== */
+/* ==================== SCHEDULE TITLE ==================== */
 .mental-schedule h2 {
-  font-size: 1.3rem;
-  margin-bottom: 14px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 20px;
   text-align: center;
-  color: #ade8f4;
+  color: #00bfff;
+  border-bottom: 2px solid #00bfff;
+  display: inline-block;
+  padding-bottom: 6px;
 }
 
-/* ==================== ACTIVITY BLOCK ==================== */
+/* ==================== ACTIVITY ENTRY ==================== */
 .activity-entry {
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 16px 20px;
-  border-radius: 16px;
+  background-color: #fefefe;
+  padding: 20px 24px;
+  border-radius: 12px;
   margin-bottom: 20px;
-  box-shadow: 0 0 14px rgba(127, 255, 212, 0.1);
-  transition: transform 0.3s ease, background 0.3s ease;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.activity-entry:hover {
+  background-color: #f5faff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .activity-entry h3 {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   font-size: 1.1rem;
   font-weight: 600;
-  color: aquamarine;
+  color: #007acc;
 }
 
 .activity-entry p {
-  margin: 2px 0;
+  margin: 3px 0;
   font-size: 0.95rem;
-  color: #e0e0e0;
+  color: #333;
+}
+
+/* ==================== NO TASK MESSAGE ==================== */
+#task-list li:first-child:only-child {
+  font-style: italic;
+  color: #777;
+  background: transparent;
+  text-align: center;
+  border: none;
+  box-shadow: none;
 }
 
 /* ==================== ANIMATIONS ==================== */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
-  .mental-wrapper {
-    width: 95%;
-    padding: 24px 18px;
-    margin-top: 80px;
-  }
-
-  .activity-entry {
-    padding: 14px 16px;
-  }
-
   .mental-header h1 {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
 
   .mental-schedule h2 {
     font-size: 1.1rem;
+  }
+
+  .activity-entry {
+    padding: 16px 18px;
+  }
+
+  .mental-wrapper {
+    padding: 12px;
+  }
+
+  .navbar ul {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .navbar a.nav-button {
+    padding: 10px 14px;
+    font-size: 0.95rem;
   }
 }

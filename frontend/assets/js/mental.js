@@ -1,56 +1,70 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const params = new URLSearchParams(window.location.search);
-  const selectedTask = params.get("task");
+  const dateEl = document.getElementById("today-date");
+  const taskList = document.getElementById("task-list");
+  const now = new Date();
+  const todayDateStr = now.toDateString();
+  dateEl.textContent = todayDateStr;
 
+  const LAST_ACTIVE_KEY = "lastActiveDate";
+  const TASKS_KEY = "scheduledTasks";
+
+  // === AUTO RESET TASKS AT MIDNIGHT ===
+  const lastActiveDate = localStorage.getItem(LAST_ACTIVE_KEY);
+  if (lastActiveDate !== todayDateStr) {
+    localStorage.removeItem(TASKS_KEY);
+    localStorage.setItem(LAST_ACTIVE_KEY, todayDateStr);
+  }
+
+  // === TASK OPTIONS ===
   const activityMap = {
     meditation: {
-      title: "🧘‍♀️ Meditation Zen",
-      time: "10:00 a.m.",
-      status: "In Progress",
-      bg: "../images/meditation.jpg"
+      title: "Meditation Zen",
+      time: "10:00 AM",
     },
     breathing: {
-      title: "🌬️ Breathing Session",
-      time: "1:00 p.m.",
-      status: "To Do",
-      bg: "frontend/assets/images/mental/bedtime.jpeg"
+      title: "Breathing Session",
+      time: "01:00 PM",
     },
     journaling: {
-      title: "🗘️ Journaling",
-      time: "6:00 p.m.",
-      status: "To Do",
-      bg: "../images/journaling.jpg"
+      title: "Journaling",
+      time: "06:00 PM",
     },
     bedtime: {
-      title: "🌙 Bedtime Routine",
-      time: "11:00 p.m.",
-      status: "To Do",
-      bg: "../images/bedtime.jpg"
+      title: "Bedtime Routine",
+      time: "11:00 PM",
     }
   };
 
-  const container = document.getElementById("activity-schedule");
-  const taskTitle = document.getElementById("task-title");
+  // === READ URL PARAM ===
+  const urlParams = new URLSearchParams(window.location.search);
+  const taskParam = urlParams.get("task");
 
-  if (activityMap[selectedTask]) {
-    const activity = activityMap[selectedTask];
+  if (taskParam && activityMap[taskParam]) {
+    const stored = JSON.parse(localStorage.getItem(TASKS_KEY) || '[]');
+    const isAlreadyAdded = stored.some(t => t.title === activityMap[taskParam].title);
 
-    // Set background
-    document.body.style.backgroundImage = `url('${activity.bg}')`;
+    if (!isAlreadyAdded) {
+      const newEntry = {
+        title: activityMap[taskParam].title,
+        time: activityMap[taskParam].time,
+        created: now.toISOString()
+      };
+      stored.push(newEntry);
+      localStorage.setItem(TASKS_KEY, JSON.stringify(stored));
+    }
+  }
 
-    // Set activity content
-    container.innerHTML = `
-      <div class="activity-entry">
-        <h3>${activity.title}</h3>
-        <p>Time: ${activity.time}</p>
-        <p>Status: ${activity.status}</p>
-      </div>
-    `;
-
-    // Set the task title for the heading
-    taskTitle.textContent = activity.title;
+  // === SHOW TASKS ===
+  const stored = JSON.parse(localStorage.getItem(TASKS_KEY) || '[]');
+  if (stored.length === 0) {
+    taskList.innerHTML = '<li>No activity scheduled. Go back and choose one.</li>';
   } else {
-    container.innerHTML = `<p>No activity selected. Go back and choose one.</p>`;
-    document.body.style.backgroundImage = `url('../images/default-bg.jpg')`;
+    taskList.innerHTML = stored.map(task => `
+      <li class="activity-entry">
+        <h3>${task.title}</h3>
+        <p>Time: ${task.time}</p>
+        <p>Added: ${new Date(task.created).toLocaleString()}</p>
+      </li>
+    `).join('');
   }
 });
