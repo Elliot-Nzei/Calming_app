@@ -4,7 +4,8 @@ BACKEND_DIR=backend
 VENV_DIR=venv
 PYTHON=python
 PIP=$(VENV_DIR)\Scripts\python.exe -m pip
-UVICORN=$(VENV_DIR)\Scripts\uvicorn
+UVICORN=$(VENV_DIR)\Scripts\uvicorn.exe
+ACTIVATE=$(VENV_DIR)\Scripts\activate.bat
 
 # Default target
 all: run
@@ -19,23 +20,23 @@ install:
 	@echo ">>> Installing dependencies..."
 	@$(PIP) install -r requirements.txt
 
-# Run FastAPI backend
+# Run FastAPI backend directly with venv activated in new cmd window
 run-backend:
 	@echo ">>> Running FastAPI backend..."
-	start cmd /K "$(UVICORN) backend.main:app --reload --host 127.0.0.1 --port 8000"
+	cmd /c start "" cmd /k "$(ACTIVATE) && $(UVICORN) backend.main:app --reload --host 127.0.0.1 --port 8000"
 
-# Open frontend
+# Open frontend in browser (fixed)
 run-frontend:
 	@echo ">>> Opening frontend in browser..."
-	start $(FRONTEND_DIR)\index.html
+	cmd /c start "" explorer.exe "$(FRONTEND_DIR)\index.html"
 
-# Run both backend and frontend
+# Run both backend and frontend without recursive make calls
 run: install
 	@echo ">>> Starting app..."
-	start cmd /K "$(MAKE) run-backend"
-	start cmd /C "$(MAKE) run-frontend"
+	cmd /c start "" cmd /k "$(ACTIVATE) && $(UVICORN) backend.main:app --reload --host 127.0.0.1 --port 8000"
+	cmd /c start "" explorer.exe "$(FRONTEND_DIR)\index.html"
 
-# Delete venv
+# Clean venv
 clean:
 	@echo ">>> Cleaning up..."
-	@if exist "$(VENV_DIR)" ( rmdir /S /Q $(VENV_DIR) )
+	@if exist "$(VENV_DIR)" ( rmdir /S /Q "$(VENV_DIR)" )
