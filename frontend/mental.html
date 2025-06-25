@@ -2,45 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Daily Mental Wellness</title>
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     crossorigin="anonymous"
+    referrerpolicy="no-referrer"
   />
   <link rel="stylesheet" href="assets/css/mental.css" />
+  <link rel="stylesheet" href="assets/css/navbar.css" />
 </head>
 <body id="body">
   <!-- Navbar -->
-  <div class="navbar-container">
+  <nav class="navbar-container" role="navigation" aria-label="Primary Navigation">
     <div class="navbar">
       <ul>
-        <li><a class="nav-button" href="index.html"><i class="fas fa-home"></i></a></li>
-        <li><a class="nav-button" href="moon.html"><i class="fas fa-moon"></i></a></li>
-        <li class="active"><a class="nav-button" href="mental.html"><i class="far fa-circle"></i></a></li>
-        <li><a class="nav-button" href="music.html"><i class="fas fa-music"></i></a></li>
+        <li><a class="nav-button" href="index.html" aria-label="Home"><i class="fas fa-home"></i></a></li>
+        <li><a class="nav-button" href="moon.html" aria-label="Moon"><i class="fas fa-moon"></i></a></li>
+        <li class="active"><a class="nav-button" href="mental.html" aria-current="page" aria-label="Mental Wellness"><i class="far fa-circle"></i></a></li>
+        <li><a class="nav-button" href="music.html" aria-label="Music"><i class="fas fa-music"></i></a></li>
       </ul>
     </div>
-  </div>
+  </nav>
 
   <main class="main-wrapper">
-    <div class="mental-wrapper">
-      <div class="mental-header">
-        <h1>Task Scheduled</h1>
-        <div class="date" id="today-date"></div>
-      </div>
-      <div class="mental-schedule">
-        <h2>Today's Tasks</h2>
-        <ul id="task-list"></ul>
-      </div>
-    </div>
+    <section class="mental-wrapper" aria-labelledby="task-header">
+      <header class="mental-header">
+        <h1 id="task-header">Task Scheduled</h1>
+        <p class="date" id="today-date" aria-live="polite" aria-atomic="true"></p>
+      </header>
+
+      <!-- Task Form -->
+      <section class="task-form-container" aria-labelledby="add-task-header">
+        <h2 id="add-task-header">Add a New Task</h2>
+        <form id="task-form" aria-label="Add Task Form">
+          <input type="text" id="task-name" placeholder="Task Name" required aria-required="true" />
+          <input type="time" id="task-time" required aria-required="true" />
+          <button type="submit">Add Task</button>
+        </form>
+      </section>
+
+      <section class="mental-schedule" aria-labelledby="today-tasks-header">
+        <h2 id="today-tasks-header">Today's Tasks</h2>
+        <ul id="task-list" aria-live="polite" aria-atomic="true"></ul>
+      </section>
+
+    </section>
   </main>
 
   <footer>
     <!-- Reserved for future use -->
   </footer>
 
-  <script src="assets/js/mental.js"></script>
+  <script src="assets/js/mental.js" defer></script>
 </body>
 </html>

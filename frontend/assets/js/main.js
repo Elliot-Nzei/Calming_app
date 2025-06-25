@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // === Carousel Logic ===
+  // === Carousel Logic (Manual only) ===
   const leftArrow = document.querySelector('.carousel-arrow.left');
   const rightArrow = document.querySelector('.carousel-arrow.right');
   const slider = document.querySelector('.todo-slider');
@@ -78,78 +78,147 @@ document.addEventListener("DOMContentLoaded", () => {
     updateArrows(); // Init
   }
 
-  // === Infinite Auto-Scrolling Slider with Drag ===
-  if (slider) {
-    let isDragging = false;
-    let startX = 0;
-    let scrollLeft = 0;
-    let velocity = 0;
-    const scrollSpeed = 0.5;
-    const friction = 0.95;
-    const maxScrollLeft = slider.scrollWidth / 2;
-
-    const slides = Array.from(slider.children);
-    slides.forEach(slide => {
-      const clone = slide.cloneNode(true);
-      slider.appendChild(clone);
-    });
-
-    function autoScroll() {
-      if (!isDragging) {
-        velocity = velocity * friction + scrollSpeed * (1 - friction);
-        slider.scrollLeft += velocity;
-        if (slider.scrollLeft >= maxScrollLeft) {
-          slider.scrollLeft -= maxScrollLeft;
-        }
-      }
-      requestAnimationFrame(autoScroll);
-    }
-
-    autoScroll();
-
-    function onDragStart(e) {
-      isDragging = true;
-      startX = e.pageX || e.touches[0].pageX;
-      scrollLeft = slider.scrollLeft;
-      velocity = 0;
-    }
-
-    function onDragMove(e) {
-      if (!isDragging) return;
-      e.preventDefault();
-      const x = e.pageX || e.touches[0].pageX;
-      const walk = startX - x;
-      slider.scrollLeft = scrollLeft + walk;
-      const now = performance.now();
-      velocity = (slider.scrollLeft - scrollLeft) / (now - (slider._lastTime || now));
-      slider._lastTime = now;
-      scrollLeft = slider.scrollLeft;
-      startX = x;
-    }
-
-    function onDragEnd() {
-      isDragging = false;
-      slider._lastTime = null;
-    }
-
-    slider.addEventListener('mousedown', onDragStart);
-    slider.addEventListener('mousemove', onDragMove);
-    slider.addEventListener('mouseleave', onDragEnd);
-    slider.addEventListener('mouseup', onDragEnd);
-    slider.addEventListener('touchstart', onDragStart);
-    slider.addEventListener('touchmove', onDragMove);
-    slider.addEventListener('touchend', onDragEnd);
-    slider.addEventListener('touchcancel', onDragEnd);
-    slider.addEventListener('mouseenter', () => isDragging = true);
-    slider.addEventListener('mouseleave', () => isDragging = false);
-  }
-
-  // === Todo Card Navigation ===
+  // === Todo Card Navigation (preserve ?task=... and store in localStorage) ===
   document.querySelectorAll('.todo-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const task = card.dataset.task;
-      localStorage.setItem('selectedTask', task);
-      window.location.href = './mental.html';
+    card.addEventListener('click', (e) => {
+      const url = new URL(card.href);
+      const task = url.searchParams.get('task');
+      if (task) {
+        localStorage.setItem('selectedTask', task);
+      }
     });
   });
 });
+
+// === Task Scheduler ===
+const scheduledTasks = [
+  { task: "Meditation Zen", time: "08:00" },
+  { task: "Breathing Session", time: "14:00" },
+  { task: "Journaling", time: "18:00" },
+  { task: "Bedtime Routine", time: "21:00" },
+];
+
+const notificationMessage = document.getElementById("notification-message");
+const notificationContainer = document.querySelector(".notification-container");
+
+function formatTime(date) {
+  return date.toTimeString().slice(0, 5); // "HH:MM"
+}
+
+function checkTaskNotification() {
+  const now = new Date();
+  const currentTime = formatTime(now);
+
+  scheduledTasks.forEach(task => {
+    if (task.time === currentTime && notificationMessage) {
+      notificationMessage.textContent = `⏰ It's time for: ${task.task}`;
+      notificationContainer.classList.add("active");
+      
+      // Optional: use browser notification
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification(`It's time for: ${task.task}`);
+      }
+
+      // Hide after 1 minute unless re-triggered
+      setTimeout(() => {
+        if (notificationMessage.textContent.includes(task.task)) {
+          notificationMessage.textContent = "";
+          notificationContainer.classList.remove("active");
+        }
+      }, 60 * 1000);
+    }
+  });
+}
+
+// === Ask for notification permission on load ===
+if ("Notification" in window && Notification.permission !== "granted") {
+  Notification.requestPermission();
+}
+
+// Check every 30 seconds
+setInterval(checkTaskNotification, 30 * 1000);
+
+document.addEventListener("DOMContentLoaded", () => {
+  const notificationMessage = document.getElementById("notification-message");
+  const notificationContainer = document.querySelector(".notification-container");
+  const taskForm = document.getElementById("task-form");
+  const taskNameInput = document.getElementById("task-name");
+  const taskTimeInput = document.getElementById("task-time");
+
+  let scheduledTasks = JSON.parse(localStorage.getItem("scheduledTasks")) || [];
+
+  // Save tasks to localStorage
+  function saveTasks() {
+    localStorage.setItem("scheduledTasks", JSON.stringify(scheduledTasks));
+  }
+
+  // Format "HH:MM"
+  function formatTime(date) {
+    return date.toTimeString().slice(0, 5);
+  }
+
+  // Add a new task
+  taskForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const task = {
+      task: taskNameInput.value.trim(),
+      time: taskTimeInput.value
+    };
+    if (task.task && task.time) {
+      scheduledTasks.push(task);
+      saveTasks();
+      taskForm.reset();
+      alert(`Task "${task.task}" scheduled at ${task.time}`);
+    }
+  });
+
+  // Notification logic
+  function triggerNotification(taskName) {
+    notificationMessage.textContent = `⏰ It's time for: ${taskName}`;
+    notificationContainer.classList.add("active");
+
+    // Browser notification
+    if ("Notification" in window && Notification.permission === "granted") {
+      new Notification(`⏰ Reminder: ${taskName}`);
+    }
+
+    // Sound alert
+    const beep = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
+    beep.play().catch(() => {});
+
+    // Vibration
+    if (navigator.vibrate) {
+      navigator.vibrate([300, 200, 300]);
+    }
+
+    setTimeout(() => {
+      notificationContainer.classList.remove("active");
+      notificationMessage.textContent = "";
+    }, 60000); // Hide after 1 minute
+  }
+
+  // Check every 30 sec for matches
+  const triggeredToday = new Set();
+  function checkTaskNotification() {
+    const now = new Date();
+    const currentTime = formatTime(now);
+    const dateKey = now.toISOString().slice(0, 10); // YYYY-MM-DD
+
+    scheduledTasks.forEach(task => {
+      const key = `${dateKey}-${task.task}-${task.time}`;
+      if (task.time === currentTime && !triggeredToday.has(key)) {
+        triggerNotification(task.task);
+        triggeredToday.add(key);
+      }
+    });
+  }
+
+  // Permission
+  if ("Notification" in window && Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
+
+  // Start checking
+  setInterval(checkTaskNotification, 30000);
+});
+
