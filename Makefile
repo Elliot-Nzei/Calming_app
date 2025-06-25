@@ -39,11 +39,13 @@ ifeq ($(OS),Windows_NT)
 	) else ( \
 		echo venv already exists \
 	)
+	@echo ">>> Installing dependencies with venv activated..."
+	@cmd /c "$(ACTIVATE) && python -m pip install -r requirements.txt"
 else
 	@$(VENV_EXISTS) && $(PYTHON) -m venv $(VENV_DIR) || echo "venv already exists"
+	@echo ">>> Installing dependencies with venv activated..."
+	@bash -c "source $(VENV_DIR)/bin/activate && pip install -r requirements.txt"
 endif
-	@echo ">>> Installing dependencies..."
-	@$(PIP) install -r requirements.txt
 
 run-backend:
 	@echo ">>> Running backend..."
