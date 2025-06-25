@@ -172,3 +172,38 @@ document.addEventListener("DOMContentLoaded", () => {
   slider.addEventListener('mouseenter', () => { isDragging = true; });
   slider.addEventListener('mouseleave', () => { isDragging = false; });
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("/api/user-info")
+    .then(res => {
+      if (!res.ok) throw new Error("No user info found");
+      return res.json();
+    })
+    .then(data => {
+      const name = data.name || "Guest";
+      document.getElementById("personal-greeting").textContent = `Welcome, ${name}`;
+    })
+    .catch(err => {
+      console.warn("User not logged in or not found.");
+    });
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Personalized greeting
+  fetch("/api/user-info")
+    .then(res => res.ok ? res.json() : Promise.reject())
+    .then(data => {
+      const welcomeEl = document.getElementById("personal-greeting");
+      if (welcomeEl) {
+        welcomeEl.textContent = `Welcome, ${data.name}`;
+      }
+    })
+    .catch(() => {
+      const welcomeEl = document.getElementById("personal-greeting");
+      if (welcomeEl) {
+        welcomeEl.textContent = "Welcome, Guest";
+      }
+    });
+});

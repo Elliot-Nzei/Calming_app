@@ -16,15 +16,23 @@ document.getElementById("user-form").addEventListener("submit", async (e) => {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({ name, email }),
+      redirect: "manual"  // This is critical to handle 303 manually
     });
 
-    if (res.ok) {
-      window.location.href = "/pages/index.html";
+    if (res.status === 303) {
+      const location = res.headers.get("Location");
+      if (location) {
+        // Follow the redirect manually
+        window.location.href = location;
+      } else {
+        // Fallback in case the Location header isn't read
+        window.location.href = "/index.html";
+      }
     } else {
-      alert("Something went wrong. Try again.");
+      alert("Submission failed. Please try again.");
     }
   } catch (err) {
     console.error("Error submitting form:", err);
-    alert("Failed to connect to server.");
+    alert("Connection error.");
   }
 });
