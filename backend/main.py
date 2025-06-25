@@ -5,29 +5,33 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 import json
+import os
 
 app = FastAPI()
 
+# === CORS Middleware (if frontend is on same server, adjust for production)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For production, replace with specific domain
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# === Path Setup ===
-FRONTEND_DIR = Path("frontend")
+# === Path Setup (absolute safe paths)
+BASE_DIR = Path(__file__).resolve().parent.parent  # Go up from backend/
+FRONTEND_DIR = BASE_DIR / "frontend"
 TEMPLATE_DIR = FRONTEND_DIR
 MUSIC_FOLDER = FRONTEND_DIR / "assets" / "music"
-USER_DB = Path("data/users.json")
+USER_DB = BASE_DIR / "data" / "users.json"
 
 # === Ensure user DB exists ===
 USER_DB.parent.mkdir(parents=True, exist_ok=True)
 if not USER_DB.exists():
     USER_DB.write_text(json.dumps({}, indent=2))
 
-messages = []
+# === Template setup
 templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
+messages = []
 
 # === Routes ===
 
@@ -37,16 +41,13 @@ def show_startup(request: Request):
 
 @app.post("/submit-user")
 async def submit_user(request: Request, name: str = Form(...), email: str = Form(...)):
-    # Clean input
     name = name.strip()
     email = email.strip().lower()
 
-    # Load current users
     users = json.loads(USER_DB.read_text())
     users[email] = {"name": name}
     USER_DB.write_text(json.dumps(users, indent=2))
 
-    # Redirect to index.html and set cookie
     response = RedirectResponse(url="/index.html", status_code=303)
     response.set_cookie(key="user_email", value=email, httponly=True)
     return response
@@ -91,5 +92,5 @@ async def post_message(request: Request):
     return {"status": "success"}
 
 # === Mount static files ===
-app.mount("/assets/music", StaticFiles(directory=MUSIC_FOLDER), name="music")
-app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
+app.mount("/assets/music", StaticFiles(directory=str(MUSIC_FOLDER)), name="music")
+app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
