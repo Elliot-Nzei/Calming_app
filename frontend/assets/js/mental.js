@@ -1,5 +1,3 @@
-// mental.js
-
 document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   const selectedTask = params.get("task");
@@ -15,10 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
       title: "🌬️ Breathing Session",
       time: "1:00 p.m.",
       status: "To Do",
-      bg: "../images/breathing.jpg"
+      bg: "frontend/assets/images/mental/bedtime.jpeg"
     },
     journaling: {
-      title: "📝 Journaling",
+      title: "🗘️ Journaling",
       time: "6:00 p.m.",
       status: "To Do",
       bg: "../images/journaling.jpg"
@@ -31,11 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  const activity = activityMap[selectedTask];
   const container = document.getElementById("activity-schedule");
+  const taskTitle = document.getElementById("task-title");
 
-  if (activity) {
-    // Inject HTML
+  if (activityMap[selectedTask]) {
+    const activity = activityMap[selectedTask];
+
+    // Set background
+    document.body.style.backgroundImage = `url('${activity.bg}')`;
+
+    // Set activity content
     container.innerHTML = `
       <div class="activity-entry">
         <h3>${activity.title}</h3>
@@ -44,8 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
 
-    // Set background image
-    document.body.style.backgroundImage = `url('${activity.bg}')`;
+    // Set the task title for the heading
+    taskTitle.textContent = activity.title;
   } else {
     container.innerHTML = `<p>No activity selected. Go back and choose one.</p>`;
     document.body.style.backgroundImage = `url('../images/default-bg.jpg')`;
