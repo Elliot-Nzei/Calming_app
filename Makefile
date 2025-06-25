@@ -1,6 +1,7 @@
 # === Configuration ===
 FRONTEND_DIR=frontend
 BACKEND_DIR=backend
+PYTHON=python
 VENV_DIR=venv
 
 ifeq ($(OS),Windows_NT)
@@ -80,3 +81,34 @@ git-init:
 	@$(GIT_CHECK_REMOTE)
 	@git branch -M main
 	@git push -u origin main
+
+test:
+	@echo ">>> Testing backend at http://127.0.0.1:8000 ..."
+	@$(PYTHON) -c "import sys, urllib.request; \
+url = 'http://127.0.0.1:8000'; \
+print('Checking backend...'); \
+try: \
+    response = urllib.request.urlopen(url); \
+    print('Backend status:', response.status); \
+    assert response.status == 200; \
+except Exception as e: \
+    print('Backend failed:', e); \
+    sys.exit(1)"
+
+ifeq ($(OS),Windows_NT)
+	@echo ">>> Testing frontend file..."
+	@if exist "$(FRONTEND_DIR)\index.html" ( \
+		echo "Frontend index.html exists." \
+	) else ( \
+		echo "Error: frontend index.html not found." && exit 1 \
+	)
+else
+	@echo ">>> Testing frontend file..."
+	@if [ -f "$(FRONTEND_DIR)/index.html" ]; then \
+		echo "Frontend index.html exists."; \
+	else \
+		echo "Error: frontend index.html not found."; exit 1; \
+	fi
+endif
+
+	@echo ">>> All tests passed!"
