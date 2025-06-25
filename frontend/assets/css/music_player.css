@@ -31,14 +31,14 @@ html, body {
   min-height: 100vh;
 }
 
-/* ========== NAVBAR ========== */
+/* ==================== Navbar ==================== */
 .navbar-container {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  padding: 10px 0;
   background-color: transparent;
+  padding: 10px 0;
   z-index: 1000;
   display: flex;
   justify-content: center;
@@ -53,6 +53,7 @@ html, body {
 .navbar ul {
   list-style: none;
   display: flex;
+  flex-direction: row; /* Force horizontal always */
   gap: 2vw;
   padding: 0;
   margin: 0;
@@ -81,18 +82,19 @@ html, body {
   color: #fff;
 }
 
-/* ========== RESPONSIVE NAVBAR ========== */
+/* REMOVE mobile-specific column layout */
 @media (max-width: 768px) {
   .navbar ul {
-    flex-direction: column;
+    flex-direction: row; /* Force horizontal even on small screens */
+    justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 2vw;
   }
 
   .navbar a.nav-button {
-    width: 100%;
+    width: auto; /* Allow button to size naturally */
     text-align: center;
-    padding: 12px 0;
+    padding: 10px 16px;
   }
 
   .screen-wrapper {
@@ -244,7 +246,22 @@ html, body {
   box-shadow: 0 0 12px #63b4cfaa;
 }
 
-/* ========== MOBILE RESPONSIVE FIXES ========== */
+/* ========== RESPONSIVE FIXES ========== */
+@media (max-width: 768px) {
+  .navbar ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4vw;
+  }
+
+  .navbar a.nav-button {
+    width: auto;
+    text-align: center;
+    padding: 10px 14px;
+  }
+}
+
 @media (max-width: 480px) {
   .music-player {
     margin-top: 70px;
@@ -280,16 +297,5 @@ html, body {
   .track-option {
     font-size: 0.85rem;
     padding: 8px 12px;
-  }
-
-  .navbar ul {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .navbar a.nav-button {
-    width: 100%;
-    text-align: center;
-    padding: 10px 0;
   }
 }

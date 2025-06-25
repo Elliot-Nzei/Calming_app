@@ -14,7 +14,7 @@
       <ul>
         <li class="active"><a class="nav-button" href="index.html"><i class="fas fa-home"></i></a></li>
         <li><a class="nav-button" href="./moon.html"><i class="fas fa-moon"></i></a></li>
-        <li><a class="nav-button" href="#"><i class="far fa-circle"></i></a></li>
+        <li><a class="nav-button" href="./mental.html"><i class="far fa-circle"></i></a></li>
         <li><a class="nav-button" href="../frontend/music.html"><i class="fas fa-music"></i></a></li>
       </ul>
     </div>
@@ -24,7 +24,7 @@
   <div class="main-wrapper">
     <main class="content">
       <section class="welcome-container">
-        <h1 id="personal-greeting" class="personal-greeting"></h1>
+        <h1 id="welcome-text">Welcome to Index</h1>
         <span id="current-date" aria-label="Current date"></span>
 
         <section class="notification-container" role="alert" aria-live="polite">
@@ -34,28 +34,35 @@
       </section>
     </main>
 
-  <section class="todo-section" aria-labelledby="todo-heading">
-    <h2 class="todo-heading" id="todo-heading">What do you need today?</h2>
+    <!-- To-Do Section -->
+    <section class="todo-section" aria-labelledby="todo-heading">
+      <h2 class="todo-heading" id="todo-heading">What do you need today?</h2>
 
-    <div class="todo-carousel-wrapper">
-      <button class="carousel-arrow left" aria-label="Scroll left" type="button" aria-disabled="true">
-        <span aria-hidden="true">⮜</span>
-      </button>
+      <div class="todo-carousel-wrapper">
+        <button class="carousel-arrow left" aria-label="Scroll left" type="button" aria-disabled="true">
+          <span aria-hidden="true">⮜</span>
+        </button>
 
-      <div class="todo-slider" tabindex="0" role="list" aria-live="polite" aria-roledescription="carousel">
-        <div class="todo-card" role="listitem" tabindex="0">📄 Complete project documentation</div>
-        <div class="todo-card" role="listitem" tabindex="0">🔍 Review the codebase</div>
-        <div class="todo-card" role="listitem" tabindex="0">📅 Prepare for the team meeting</div>
-        <div class="todo-card" role="listitem" tabindex="0">🧠 Brainstorm new ideas</div>
-        <div class="todo-card" role="listitem" tabindex="0">📝 Organize your workspace</div>
+        <div class="todo-slider" tabindex="0" role="list" aria-live="polite" aria-roledescription="carousel">
+          <a class="todo-card" role="listitem" tabindex="0" href="mental.html?task=meditation">
+            🧘‍♀️ Meditation Zen <br><small>Recommended in Morning</small>
+          </a>
+          <a class="todo-card" role="listitem" tabindex="0" href="mental.html?task=breathing">
+            🌬️ Breathing Session <br><small>2 min relaxation</small>
+          </a>
+          <a class="todo-card" role="listitem" tabindex="0" href="mental.html?task=journaling">
+            📝 Journaling <br><small>Reflect your thoughts</small>
+          </a>
+          <a class="todo-card" role="listitem" tabindex="0" href="mental.html?task=bedtime">
+            🌙 Bedtime Routine <br><small>Wind down at night</small>
+          </a>
+        </div>
+
+        <button class="carousel-arrow right" aria-label="Scroll right" type="button">
+          <span aria-hidden="true">⮞</span>
+        </button>
       </div>
-
-      <button class="carousel-arrow right" aria-label="Scroll right" type="button">
-        <span aria-hidden="true">⮞</span>
-      </button>
-    </div>
-  </section>
-
+    </section>
   </div>
 
   <!-- Footer -->

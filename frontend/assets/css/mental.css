@@ -1,0 +1,166 @@
+/* ==================== BODY ==================== */
+body {
+  margin: 0;
+  padding: 0;
+  height: 100dvh;
+  width: 100vw;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #f1f1f1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-image 0.6s ease-in-out;
+  background: url('../images/default-bg.jpg') center/cover no-repeat fixed;
+  backdrop-filter: blur(8px);
+}
+
+/* ==================== MAIN WRAPPER ==================== */
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.45);
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+/* ==================== SCREEN WRAPPER ==================== */
+.screen-wrapper {
+  flex: 1;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 clamp(10px, 4vw, 30px);
+  box-sizing: border-box;
+}
+
+/* ==================== NAVBAR ==================== */
+.navbar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: transparent;
+  padding: 10px 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+}
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  gap: 2vw;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar a.nav-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  text-decoration: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+  min-width: 45px;
+  height: 45px;
+}
+
+.navbar a.nav-button:hover {
+  background-color: #555;
+}
+
+.navbar li.active a.nav-button {
+  background-color: #888;
+  color: #fff;
+}
+
+/* ==================== MENTAL WRAPPER ==================== */
+.mental-wrapper {
+  width: 90%;
+  max-width: 460px;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 32px 24px;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(16px);
+  margin-top: 100px;
+  margin-bottom: 40px;
+}
+
+/* ==================== HEADER ==================== */
+.mental-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.mental-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.mental-header .date {
+  font-size: 1rem;
+  color: #ccc;
+}
+
+/* ==================== SCHEDULE ==================== */
+.mental-schedule h2 {
+  font-size: 1.3rem;
+  margin-bottom: 14px;
+  text-align: center;
+  color: #ade8f4;
+}
+
+.activity-entry {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 16px 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 12px rgba(127, 255, 212, 0.1);
+}
+
+.activity-entry h3 {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: aquamarine;
+}
+
+.activity-entry p {
+  margin: 2px 0;
+  font-size: 0.95rem;
+  color: #e0e0e0;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .mental-wrapper {
+    width: 95%;
+    padding: 24px 18px;
+  }
+
+  .activity-entry {
+    padding: 14px 16px;
+  }
+
+  .mental-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .mental-schedule h2 {
+    font-size: 1.1rem;
+  }
+}

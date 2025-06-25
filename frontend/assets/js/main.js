@@ -191,19 +191,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Personalized greeting
   fetch("/api/user-info")
-    .then(res => res.ok ? res.json() : Promise.reject())
-    .then(data => {
-      const welcomeEl = document.getElementById("personal-greeting");
-      if (welcomeEl) {
-        welcomeEl.textContent = `Welcome, ${data.name}`;
-      }
+    .then(res => {
+      if (!res.ok) throw new Error("No user info found");
+      return res.json();
     })
-    .catch(() => {
-      const welcomeEl = document.getElementById("personal-greeting");
-      if (welcomeEl) {
-        welcomeEl.textContent = "Welcome, Guest";
-      }
+    .then(data => {
+      const name = data.name || "Guest";
+      document.getElementById("personal-greeting").textContent = `Welcome, ${name}`;
+    })
+    .catch(err => {
+      console.warn("User not logged in or not found.");
     });
+});
+
+document.querySelectorAll('.todo-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const task = card.dataset.task;
+    localStorage.setItem('selectedTask', task);
+    window.location.href = './mental.html';
+  });
 });
