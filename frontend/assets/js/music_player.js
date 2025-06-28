@@ -12,6 +12,8 @@ let tracks = [];
 
 // Load a track and optionally autoplay it
 function loadTrack(fileName, index = 0, autoplay = false) {
+  if (!audio || !trackTitle || !playBtn || !progress || !currentTimeDisplay || !durationDisplay) return;
+
   audio.src = `assets/music/${fileName}`;
   trackTitle.textContent = fileName.replace(".mp3", "").replace(/_/g, " ");
   audio.load();
@@ -23,18 +25,20 @@ function loadTrack(fileName, index = 0, autoplay = false) {
   currentTrackIndex = index;
   updateActiveTrackUI();
 
-  // Auto-play after loading
   if (autoplay) {
-    audio.play().then(() => {
-      isPlaying = true;
-      playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-    }).catch(err => {
-      console.warn("Autoplay blocked:", err);
-    });
+    audio.play()
+      .then(() => {
+        isPlaying = true;
+        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      })
+      .catch(err => {
+        console.warn("Autoplay blocked:", err);
+      });
   }
 }
 
 function updateActiveTrackUI() {
+  if (!trackList) return;
   const options = trackList.querySelectorAll(".track-option");
   options.forEach((el, idx) => {
     el.classList.toggle("active", idx === currentTrackIndex);
@@ -42,6 +46,7 @@ function updateActiveTrackUI() {
 }
 
 function togglePlay() {
+  if (!audio || !playBtn) return;
   if (!audio.src) return;
   if (isPlaying) {
     audio.pause();
@@ -53,27 +58,31 @@ function togglePlay() {
   isPlaying = !isPlaying;
 }
 
-audio.addEventListener("timeupdate", () => {
-  if (!audio.duration) return;
-  progress.value = (audio.currentTime / audio.duration) * 100 || 0;
-  currentTimeDisplay.textContent = formatTime(audio.currentTime);
-  durationDisplay.textContent = formatTime(audio.duration);
-});
+if (audio) {
+  audio.addEventListener("timeupdate", () => {
+    if (!audio.duration) return;
+    if (progress) progress.value = (audio.currentTime / audio.duration) * 100 || 0;
+    if (currentTimeDisplay) currentTimeDisplay.textContent = formatTime(audio.currentTime);
+    if (durationDisplay) durationDisplay.textContent = formatTime(audio.duration);
+  });
 
-progress.addEventListener("input", () => {
-  if (!audio.duration) return;
-  audio.currentTime = (progress.value / 100) * audio.duration;
-});
+  audio.addEventListener("ended", () => {
+    if (currentTrackIndex + 1 < tracks.length) {
+      loadTrack(tracks[currentTrackIndex + 1], currentTrackIndex + 1, true);
+    } else {
+      isPlaying = false;
+      if (playBtn) playBtn.innerHTML = '<i class="fas fa-play"></i>';
+      if (progress) progress.value = 0;
+    }
+  });
+}
 
-audio.addEventListener("ended", () => {
-  if (currentTrackIndex + 1 < tracks.length) {
-    loadTrack(tracks[currentTrackIndex + 1], currentTrackIndex + 1, true);
-  } else {
-    isPlaying = false;
-    playBtn.innerHTML = '<i class="fas fa-play"></i>';
-    progress.value = 0;
-  }
-});
+if (progress) {
+  progress.addEventListener("input", () => {
+    if (!audio || !audio.duration) return;
+    audio.currentTime = (progress.value / 100) * audio.duration;
+  });
+}
 
 function formatTime(time) {
   if (isNaN(time)) return "0:00";
@@ -82,13 +91,15 @@ function formatTime(time) {
   return `${minutes}:${seconds}`;
 }
 
-playBtn.addEventListener("click", togglePlay);
+if (playBtn) playBtn.addEventListener("click", togglePlay);
 
 // Load track list from backend
-fetch("http://localhost:8000/api/music-tracks")
+fetch("/api/music-tracks")
   .then(res => res.json())
   .then(data => {
     tracks = data.tracks || [];
+    if (!trackList) return;
+
     trackList.innerHTML = "";
     tracks.forEach((track, idx) => {
       const li = document.createElement("li");
@@ -109,5 +120,5 @@ fetch("http://localhost:8000/api/music-tracks")
   })
   .catch(err => {
     console.error("Failed to load track list:", err);
-    trackTitle.textContent = "Failed to load tracks.";
+    if (trackTitle) trackTitle.textContent = "Failed to load tracks.";
   });

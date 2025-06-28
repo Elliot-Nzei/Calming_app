@@ -2,25 +2,22 @@ from fastapi import FastAPI, Request, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 from pathlib import Path
 import json
-import os
 
 app = FastAPI()
 
-# === CORS Middleware (if frontend is on same server, adjust for production)
+# === Enable CORS ===
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Restrict in production
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# === Path Setup (absolute safe paths)
-BASE_DIR = Path(__file__).resolve().parent.parent  # Go up from backend/
+# === Directory Setup ===
+BASE_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = BASE_DIR / "frontend"
-TEMPLATE_DIR = FRONTEND_DIR
 MUSIC_FOLDER = FRONTEND_DIR / "assets" / "music"
 USER_DB = BASE_DIR / "data" / "users.json"
 
@@ -29,18 +26,13 @@ USER_DB.parent.mkdir(parents=True, exist_ok=True)
 if not USER_DB.exists():
     USER_DB.write_text(json.dumps({}, indent=2))
 
-# === Template setup
-templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
+# === In-memory messages store ===
 messages = []
 
-# === Routes ===
-
-@app.get("/")
-def show_startup(request: Request):
-    return templates.TemplateResponse("startup.html", {"request": request})
+# === APIs ===
 
 @app.post("/submit-user")
-async def submit_user(request: Request, name: str = Form(...), email: str = Form(...)):
+async def submit_user(name: str = Form(...), email: str = Form(...)):
     name = name.strip()
     email = email.strip().lower()
 
@@ -91,6 +83,6 @@ async def post_message(request: Request):
     messages.append({"text": message, "sender": sender})
     return {"status": "success"}
 
-# === Mount static files ===
+# === Mount Static Files ===
 app.mount("/assets/music", StaticFiles(directory=str(MUSIC_FOLDER)), name="music")
 app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")

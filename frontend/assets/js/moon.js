@@ -6,95 +6,102 @@ const messageInput = document.getElementById("message-input");
 function getClientId() {
   let clientId = localStorage.getItem("clientId");
   if (!clientId) {
-    clientId = 'client-' + Math.random().toString(36).substr(2, 9);
+    clientId = 'client-' + Math.random().toString(36).substring(2, 10);
     localStorage.setItem("clientId", clientId);
   }
   return clientId;
 }
 
-const clientId = getClientId();
+const clientId = getClientId(); // ✅ Must be defined before usage
+console.log("ClientID:", clientId);
 
-// Load messages from backend
+// === Load messages from backend ===
 async function loadMessages() {
+  if (!chatBox) return;
   try {
-    const res = await fetch("http://localhost:8000/api/messages");
+    const res = await fetch("/api/messages");
     if (!res.ok) throw new Error("Failed to load messages");
     const data = await res.json();
 
     chatBox.innerHTML = "";
-    data.messages.forEach(msgObj => {
+
+    const frag = document.createDocumentFragment();
+    data.messages.forEach(msg => {
       const div = document.createElement("div");
       div.classList.add("chat-message");
-      div.textContent = msgObj.text;
-
-      if (msgObj.sender === clientId) {
-        div.classList.add("sent");
-      } else {
-        div.classList.add("received");
-      }
-      chatBox.appendChild(div);
+      div.classList.add(msg.sender === clientId ? "sent" : "received");
+      div.textContent = msg.text;
+      frag.appendChild(div);
     });
+
+    chatBox.appendChild(frag);
     chatBox.scrollTop = chatBox.scrollHeight;
-  } catch (error) {
-    console.error(error);
-    appendError("Error loading messages. Please try again.");
+
+    console.log("Messages loaded:", data.messages);
+  } catch (err) {
+    console.error("Load Error:", err);
+    appendError("⚠️ Unable to load messages.");
   }
 }
 
-// Handle new message submission
-chatForm.addEventListener("submit", async e => {
+// === Send a new message ===
+chatForm?.addEventListener("submit", async e => {
   e.preventDefault();
-  const message = messageInput.value.trim();
+  const message = messageInput?.value.trim();
   if (!message) return;
 
   try {
-    const res = await fetch("http://localhost:8000/api/messages", {
+    const res = await fetch("/api/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message, sender: clientId }),
     });
-    if (!res.ok) throw new Error("Failed to send message");
+
+    if (!res.ok) throw new Error("Failed to send");
 
     messageInput.value = "";
     await loadMessages();
-  } catch (error) {
-    console.error(error);
-    appendError("Error sending message. Please try again.");
+  } catch (err) {
+    console.error("Send Error:", err);
+    appendError("⚠️ Unable to send message.");
   }
 });
 
-// Send message on Enter key (without Shift)
-messageInput.addEventListener("keydown", e => {
+// === Send on Enter (without Shift) ===
+messageInput?.addEventListener("keydown", e => {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
-    chatForm.requestSubmit();
+    chatForm?.requestSubmit();
   }
 });
 
-loadMessages();
-setInterval(loadMessages, 3000);
+// === Error Logging Helpers ===
+function appendError(msg) {
+  if (!chatBox) return;
+  const p = document.createElement("p");
+  p.textContent = msg;
+  p.style.color = "tomato";
+  p.style.fontStyle = "italic";
+  p.style.margin = "10px 0";
+  chatBox.appendChild(p);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
 
 window.addEventListener("error", event => {
   console.error("JS Error:", event.message);
-  appendError(`JS Error: ${event.message}`);
+  appendError(`⚠️ JS Error: ${event.message}`);
 });
 
 window.addEventListener("unhandledrejection", event => {
-  console.error("Unhandled Promise Rejection:", event.reason);
-  appendError(`Unhandled Promise: ${event.reason}`);
+  console.error("Unhandled Promise:", event.reason);
+  appendError(`⚠️ Unhandled Promise: ${event.reason}`);
 });
 
 window.addEventListener("offline", () => {
-  console.warn("You are offline.");
-  appendError("⚠️ You are offline. Messages won’t be sent.");
+  console.warn("Offline");
+  appendError("⚠️ You are offline. Messages will not send.");
 });
 
-function appendError(msg) {
-  const errorMsg = document.createElement("p");
-  errorMsg.textContent = msg;
-  errorMsg.style.color = "tomato";
-  errorMsg.style.fontStyle = "italic";
-  errorMsg.style.marginTop = "10px";
-  chatBox.appendChild(errorMsg);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
+// === Init ===
+loadMessages();
+setInterval(loadMessages, 3000); // auto-refresh every 3s
